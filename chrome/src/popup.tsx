@@ -10,10 +10,17 @@ import Timer from "./widgets/timer";
 
 import { sendToBackground } from "@plasmohq/messaging"
 
+import { useStorage } from "@plasmohq/storage/hook";
+
 function IndexPopup() {
   const [data, setData] = useState("")
+  const [token, setToken] = useStorage('token', '')
 
   const openSignIn = () => {
+    if (token) {
+      setToken(null)
+      return;
+    }
     sendToBackground({ name: "open_authorize" })
   }
   
