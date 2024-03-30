@@ -4,10 +4,28 @@ import { useStorage } from "@plasmohq/storage/hook"
 
 import { H3, Button } from '@leetup/shared-libraries';
 
+import { sendToBackground } from '@plasmohq/messaging';
+
+
 export default function Timer ()
 {
-    const [time, setTime] = useStorage<number>('time', (v) => v || 0)
+    const [start_time] = useStorage<number>('start_time')
+    const [time, setTime] = useState<number>(0)
     const [started, setStarted] = useStorage<boolean>('started', (v) => v || false)
+
+    const startTimer = async () => {
+        await sendToBackground({ name: "start_timer" })
+        setStarted(true)
+    }
+
+    useEffect(() => {
+        if (started) {
+            const interval = setInterval(() => {
+                setTime((new Date().getTime() - start_time) / 1000)
+            }, 100)
+            return () => clearInterval(interval)
+        }
+    }, [started])
 
     return (
         <div
@@ -32,7 +50,7 @@ export default function Timer ()
                 className={'flex flex-col gap-2'}
                 >
                     <Button
-                    onClick={() => setStarted(true)}
+                    onClick={startTimer}
                     >
                         Start
                     </Button>

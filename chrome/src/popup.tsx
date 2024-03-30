@@ -42,6 +42,7 @@ function IndexPopup() {
       </div>
 
       <div
+      
       className={'w-full bg-white p-4'}
       >
         <Timer />
