@@ -9,28 +9,42 @@ import { sendToBackground } from '@plasmohq/messaging';
 
 export default function Timer ()
 {
-    const [start_time] = useStorage<number>('start_time')
     const [time, setTime] = useState<number>(0)
-    const [started, setStarted] = useStorage<boolean>('started', (v) => v || false)
+
+    const [timeStarted, setTimeStarted] = useStorage<boolean>('time_started', false)
+    const [start_time, setStartTime] = useStorage<number>('start_time', (v) => v || new Date().getTime())
+    const [end_time, setEndTime] = useStorage<number>('end_time', (v) => v || new Date().getTime())
 
     const startTimer = async () => {
         await sendToBackground({ name: "start_timer" })
-        setStarted(true)
+        await setStartTime(new Date().getTime())
+        await setEndTime (new Date().getTime() + 15 * 60 * 1000)
+    }
+
+    const stopTimer = async () => {
+        await sendToBackground({ name: "stop_timer" })
     }
 
     useEffect(() => {
-        if (started) {
+        if (timeStarted) {
+            const now = new Date().getTime()
+            setEndTime(now + 15 * 60 * 1000)
             const interval = setInterval(() => {
-                setTime((new Date().getTime() - start_time) / 1000)
+                const time_diff = end_time - new Date().getTime() 
+                setTime(Math.max(0, time_diff / 1000)); // Ensure time doesn't go below 0
             }, 100)
             return () => clearInterval(interval)
         }
-    }, [started])
+        else {
+            setTime(15 * 60) 
+        }
+    }, [timeStarted])
 
     return (
         <div
         className={'w-full p-4 border rounded-xl'}
         >
+            { `${start_time} - ${end_time}`}
             <H3>Timer</H3>
 
             <hr
@@ -43,9 +57,8 @@ export default function Timer ()
                 <div
                 className={'w-20 h-20 bg-neutral-200 rounded-xl flex items-center justify-center'}
                 >
-                    {`${time}`}
+                    { `${time.toFixed(1)}` }
                 </div>
-                { `${started}`}
                 <div
                 className={'flex flex-col gap-2'}
                 >
@@ -56,7 +69,7 @@ export default function Timer ()
                     </Button>
                     <Button
                     variant={'outline'}
-                    onClick={() => setStarted(false)}
+                    onClick={stopTimer}
                     >
                         Stop
                     </Button>
