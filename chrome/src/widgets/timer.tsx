@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useStorage } from "@plasmohq/storage/hook"
 
 import { H3, Button } from '@leetup/shared-libraries';
 
 export default function Timer ()
 {
-    const [started, setStarted] = useState(false);
-    const [time, setTime] = useState(0);
+    const [time, setTime] = useStorage<number>('time', (v) => v || 0)
+    const [started, setStarted] = useStorage<boolean>('started', (v) => v || false)
 
     return (
         <div
-        className={'w-full p-2 border rounded-xl'}
+        className={'w-full p-4 border rounded-xl'}
         >
             <H3>Timer</H3>
 
             <hr
-            className={'my-2'}
+            className={'mt-2 mb-4'}
             />
 
             <div
@@ -23,7 +25,7 @@ export default function Timer ()
                 <div
                 className={'w-20 h-20 bg-neutral-200 rounded-xl flex items-center justify-center'}
                 >
-                    00:00
+                    {`${time}`}
                 </div>
                 { `${started}`}
                 <div
@@ -38,7 +40,7 @@ export default function Timer ()
                     variant={'outline'}
                     onClick={() => setStarted(false)}
                     >
-                        Start
+                        Stop
                     </Button>
                 </div>
             

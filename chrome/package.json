@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@leetup/shared-libraries": "^1.0.2",
+    "@plasmohq/messaging": "^0.6.2",
     "@plasmohq/storage": "^1.9.3",
     "autoprefixer": "^10.4.19",
     "plasmo": "0.85.2",

@@ -8,9 +8,15 @@ import '@leetup/shared-libraries/dist/styles.css';
 import '~globals.css';
 import Timer from "./widgets/timer";
 
+import { sendToBackground } from "@plasmohq/messaging"
+
 function IndexPopup() {
   const [data, setData] = useState("")
 
+  const openSignIn = () => {
+    sendToBackground({ name: "open_authorize" })
+  }
+  
   return (
     <div
     className={'bg-background-accent'}
@@ -19,13 +25,17 @@ function IndexPopup() {
       className={'w-full flex items-center justify-between p-4'}
       >
          <H3>Leetup Chrome Extension</H3>
-
+        <Button
+        onClick={openSignIn}
+        >
+            Sign in
+        </Button>
          <div
          className={'w-10 h-10 rounded-full bg-white border border-black flex items-center justify-center'}>
             <User
             className={'w-6 h-6'}
             />
-         </div>
+         B</div>
       </div>
 
       <div
