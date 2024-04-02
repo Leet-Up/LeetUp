@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { H2, H3, Button, Subtitle } from '@leetup/shared-libraries';
+import { H2, H3, Button, Subtitle, P } from '@leetup/shared-libraries';
 
 import { User } from 'react-feather';
 
@@ -43,8 +43,19 @@ function IndexPopup() {
 
       <div
       
-      className={'w-full bg-white p-4'}
+      className={'w-full bg-white p-4 flex flex-col gap-4'}
       >
+        { token ? (
+          <P>
+            You are signed in
+          </P>
+        ) : (
+          <P>
+            You are not signed in
+          </P>
+        
+        )}
+
         <Timer />
       </div>
     </div>

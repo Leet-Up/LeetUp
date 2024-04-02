@@ -10,26 +10,12 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.url) {
     const url = new URL(changeInfo.url);
-    const authorized = url.searchParams.get('authorized');
-    const code = url.searchParams.get('jwt');
+    if (url.hostname === 'leetcode.com') {
+        // get the problem slug
+        // leetcode.com/problems/two-sum
+        const slug = url.pathname.split('/')[2];
 
-    if (authorized === 'true') {
-      // the user has authorized
-      chrome.tabs.remove(tabId);
-
-      // send the code to the background script
-
-      chrome.runtime.sendMessage({ action: 'authorized', jwt: code });
-
-      chrome.storage.local.set({ jwt: code });
-
-
-      // go back to the previous tab
-      chrome.storage.local.get('previousTabId', function(data) {
-        if (data.previousTabId) {
-          chrome.tabs.update(data.previousTabId, { active: true });
-        }
-      });
+       
     }
   }
 });
